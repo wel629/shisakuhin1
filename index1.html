@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>花と色の二面性診断</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', 'Arial', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #fdfaf5;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #d98c8c;
+            border-bottom: 2px solid #e6c5c5;
+            padding-bottom: 10px;
+        }
+        .question {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .question p {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .choices label {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .choices label:hover {
+            background-color: #e6e6e6;
+        }
+        input[type="radio"] {
+            display: none;
+        }
+        input[type="radio"]:checked + span {
+            font-weight: bold;
+            color: #d98c8c;
+        }
+        button {
+            background-color: #d98c8c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button:hover {
+            background-color: #c77a7a;
+        }
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: left;
+            display: none; /* Initially hidden */
+        }
+        .result-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #d98c8c;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>花と色の二面性診断</h1>
+    <p>いくつかの簡単な質問から、あなたの「外面」と「内面」を診断します。</p>
+
+    <div id="diagnosis-questions">
+        <div class="question">
+            <p>Q1. (外面) 初対面の人に与えたい印象に最も近い花は？</p>
+            <div class="choices">
+                <label><input type="radio" name="q1" value="sunflower"> <span>明るく元気な「ひまわり」</span></label>
+                <label><input type="radio" name="q1" value="rose"> <span>華やかで自信のある「ローズ」</span></label>
+                <label><input type="radio" name="q1" value="lavender"> <span>穏やかで落ち着いた「ラベンダー」</span></label>
+                <label><input type="radio" name="q1" value="mint"> <span>爽やかで知的な「ミントの葉」</span></label>
+            </div>
+        </div>
+
+        <div class="question">
+            <p>Q2. (外面) 目標に向かって頑張る自分を応援してくれる色は？</p>
+            <div class="choices">
+                <label><input type="radio" name="q2" value="rose"> <span>情熱の「赤」</span></label>
+                <label><input type="radio" name="q2" value="sunflower"> <span>希望の「黄色」</span></label>
+                <label><input type="radio" name="q2" value="mint"> <span>集中の「青」</span></label>
+                <label><input type="radio" name="q2" value="lavender"> <span>癒やしの「紫」</span></label>
+            </div>
+        </div>
+
+        <div class="question">
+            <p>Q3. (内面) 一人でリラックスしたい時に、そばに置きたい花は？</p>
+            <div class="choices">
+                <label><input type="radio" name="q3" value="lavender"> <span>心を落ち着かせる「ラベンダー」</span></label>
+                <label><input type="radio" name="q3" value="rose"> <span>優雅な気分になる「ローズ」</span></label>
+                <label><input type="radio" name="q3" value="sunflower"> <span>眺めていると元気が出る「ひまわり」</span></label>
+                <label><input type="radio" name="q3" value="mint"> <span>思考がクリアになる「ミントの葉」</span></label>
+            </div>
+        </div>
+
+        <div class="question">
+            <p>Q4. (内面) 「ありのままの自分」を表すとしたら、どんな色？</p>
+            <div class="choices">
+                <label><input type="radio" name="q4" value="sunflower"> <span>無邪気な「オレンジ」</span></label>
+                <label><input type="radio" name="q4" value="lavender"> <span>繊細な「パステルカラー」</span></label>
+                <label><input type="radio" name="q4" value="mint"> <span>静かな「白やグレー」</span></label>
+                <label><input type="radio" name="q4" value="rose"> <span>深い愛情の「ピンク」</span></label>
+            </div>
+        </div>
+
+        <button onclick="showResult()">診断する</button>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        // 結果のテキストデータ
+        const resultsData = {
+            sunflower: {
+                name: "ひまわり",
+                outer: "太陽のように明るく、周りを元気づけるリーダータイプ。あなたの周りには自然と人が集まってきます。社交的で、常に中心的な存在でありたいと願っています。",
+                inner: "実はとても素直で、褒められるのが大好き。周りからの承認をエネルギーにして輝きます。時には一人でいると少し寂しくなってしまう、ピュアな心の持ち主です。"
+            },
+            rose: {
+                name: "ローズ",
+                outer: "自信に満ち溢れ、華やかなオーラを持つタイプ。自分の魅力や能力をよく理解しており、情熱的に物事に取り組みます。多くの人にとって憧れの存在です。",
+                inner: "プライドの高さとは裏腹に、内面はとても繊細。親しい人には深い愛情を注ぎ、大切にされたいと願っています。傷つくことを恐れるデリケートな一面も。"
+            },
+            lavender: {
+                name: "ラベンダー",
+                outer: "穏やかで、誰に対しても優しく接することができる癒やし系のタイプ。あなたがそこにいるだけで、場の空気が和らぎます。聞き上手で、多くの人から信頼されています。",
+                inner: "一人の時間を何よりも大切にする内向的な心の持ち主。感受性が豊かで、芸術的なセンスに優れています。騒がしい場所よりも、静かな環境で思考を巡らせるのが好きです。"
+            },
+            mint: {
+                name: "ミント",
+                outer: "クールで爽やかな印象を与える知的なタイプ。物事を論理的に考え、的確な判断を下すのが得意です。感情的になることは少なく、周りからは頼れる存在だと思われています。",
+                inner: "常に頭の中で物事を分析しているシャープな思考の持ち主。合理的で無駄を嫌い、自分なりのルールを大切にします。実は好奇心旺盛で、興味を持ったことはとことん探求します。"
+            }
+        };
+
+        function showResult() {
+            // スコアを初期化
+            const scores = {
+                outer: { sunflower: 0, rose: 0, lavender: 0, mint: 0 },
+                inner: { sunflower: 0, rose: 0, lavender: 0, mint: 0 }
+            };
+
+            // 選択された値を取得
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+            const q4 = document.querySelector('input[name="q4"]:checked');
+
+            // すべての質問に回答したかチェック
+            if (!q1 || !q2 || !q3 || !q4) {
+                alert("すべての質問に回答してください。");
+                return;
+            }
+
+            // スコアを加算
+            scores.outer[q1.value]++;
+            scores.outer[q2.value]++;
+            scores.inner[q3.value]++;
+            scores.inner[q4.value]++;
+
+            // 最高スコアのタイプを見つける
+            let outerType = Object.keys(scores.outer).reduce((a, b) => scores.outer[a] > scores.outer[b] ? a : b);
+            let innerType = Object.keys(scores.inner).reduce((a, b) => scores.inner[a] > scores.inner[b] ? a : b);
+
+            // 結果を表示
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="result-title">あなたの診断結果</div>
+                <p>あなたの外面は<b>【${resultsData[outerType].name}タイプ】</b>です。</p>
+                <p>${resultsData[outerType].outer}</p>
+                <hr>
+                <p>あなたの内面は<b>【${resultsData[innerType].name}タイプ】</b>です。</p>
+                <p>${resultsData[innerType].inner}</p>
+            `;
+            resultDiv.style.display = 'block'; // 結果を表示
+            
+            // 結果表示位置までスクロール
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>
